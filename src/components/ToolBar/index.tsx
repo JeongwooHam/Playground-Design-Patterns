@@ -1,33 +1,33 @@
-import { useState } from 'react';
-import * as S from './ToolBar.css';
-import { FaPencil } from "react-icons/fa6";
-import { FaPenRuler } from "react-icons/fa6";
-import { FaEraser } from "react-icons/fa6";
-import { FaArrowRotateLeft } from "react-icons/fa6";
-import { FaArrowRotateRight } from "react-icons/fa6";
-import type { ToolType } from '../../types/tools.type';
+import type { FC } from "react";
+import { useShallow } from "zustand/shallow";
+import { TOOL_CONFIG } from "../../constants/tools";
+import { useToolStore } from "../../stores/tool";
+import type { ToolType } from "../../types/tools.type";
+import { Tool } from "./components/Tool";
+import * as S from "./ToolBar.css";
 
-export const ToolBar = () => {
-    const [selectedTool, setSelectedTool] = useState<ToolType | null>(null);
+export const ToolBar: FC = () => {
+  const { currentTool, setCurrentTool } = useToolStore(
+    useShallow((state) => ({
+      currentTool: state.currentTool,
+      setCurrentTool: state.setCurrentTool,
+    }))
+  );
 
-    const handleToolChange = (tool: ToolType) => {
-        setSelectedTool(tool);
-    };
+  const handleToolChange = (tool: ToolType) => {
+    setCurrentTool(tool);
+  };
 
-    const onRedo = () => {
-        console.log('Redo');
-    };
-
-    const onUndo = () => {
-        console.log('Undo');
-    };
-    return (
-        <div className={S.Container}>
-            <FaArrowRotateLeft size={24} className={S.Button} onClick={onUndo} />
-            <FaArrowRotateRight size={24} className={S.Button} onClick={onRedo} />
-            <FaPencil size={24} className={S.Button} onClick={() => handleToolChange('pencil')} />
-            <FaPenRuler size={24} className={S.Button} onClick={() => handleToolChange('brush')} />
-            <FaEraser size={28} className={S.Button} onClick={() => handleToolChange('eraser')} />
-        </div>
-    );
-}
+  return (
+    <div className={S.Container}>
+      {TOOL_CONFIG.map((config) => (
+        <Tool
+          key={config.id}
+          config={config}
+          onClick={() => handleToolChange(config.id)}
+          isCurrentTool={currentTool === config.id}
+        />
+      ))}
+    </div>
+  );
+};

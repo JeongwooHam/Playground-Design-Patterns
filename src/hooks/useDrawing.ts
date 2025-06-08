@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type {
-  BaseToolOptions,
   DrawingContextType,
   DrawingObjectType,
   TempDrawingObjectType,
   Tool,
   ToolConstructorType,
+  ToolInitializerType,
 } from "../types/toolInstance.type";
 import { getPoint } from "../utils/point";
 
@@ -175,16 +175,34 @@ export const useDrawing = (toolRegistry: ToolRegistryType) => {
   );
 
   const setTool = useCallback(
-    (toolId: string, options: BaseToolOptions = {}) => {
+    (toolId: string, options?: ToolInitializerType) => {
       const ToolClass = toolRegistry[toolId];
-      if (ToolClass) {
+      if (!ToolClass) {
+        console.warn(`Tool with ID '${toolId}' not found.`);
+        setActiveTool(null);
+        setActiveToolId(null);
+        return;
+      }
+
+      if (!activeTool || activeTool.id !== toolId) {
         setActiveTool(new ToolClass({ id: toolId, ...options }));
         setActiveToolId(toolId);
-      } else {
-        console.warn(`Tool with ID '${toolId}' not found.`);
+        return;
       }
+
+      if (!options) {
+        return;
+      }
+
+      if (typeof activeTool.updateOptions !== "function") {
+        console.warn(`Tool '${toolId}' does not support 'updateOptions'.`);
+        setActiveTool(new ToolClass({ ...options }));
+        return;
+      }
+
+      activeTool.updateOptions(options);
     },
-    [toolRegistry]
+    [toolRegistry, activeTool]
   );
 
   return {

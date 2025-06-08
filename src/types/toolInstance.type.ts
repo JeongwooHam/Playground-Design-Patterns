@@ -1,5 +1,3 @@
-import type { IconType } from "react-icons";
-
 export type PointType = { x: number; y: number };
 
 export type RenderFunctionType = (
@@ -16,7 +14,7 @@ export type HitTestFunctionType = (
 ) => boolean;
 export type SetToolFunctionType = (
   toolId: string,
-  options?: BaseToolOptions
+  options?: ToolInitializerType
 ) => void;
 
 export interface BaseToolOptions {
@@ -25,20 +23,17 @@ export interface BaseToolOptions {
 }
 
 export interface ToolInitializerType extends BaseToolOptions {
-  id: string;
-  name: string;
-  icon?: IconType;
   [key: string]: unknown;
 }
 
 export interface Tool extends BaseToolOptions {
   id: string;
   name: string;
-  icon?: IconType;
   render: RenderFunctionType;
   onPointerDown?: PointerFunctionType;
   onPointerMove?: PointerFunctionType;
   onPointerUp?: PointerFunctionType;
+  updateOptions?: (options?: ToolInitializerType) => void;
   hitTest?: HitTestFunctionType;
 }
 

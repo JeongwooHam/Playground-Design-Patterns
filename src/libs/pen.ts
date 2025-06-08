@@ -90,4 +90,9 @@ export class PenTool implements Tool {
     this.lastPoint = null;
     this.tempObjectId = null;
   };
+
+  updateOptions(options?: Partial<PenToolOptions>) {
+    if (!options) return;
+    Object.assign(this, options);
+  }
 }

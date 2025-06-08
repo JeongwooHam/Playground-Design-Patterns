@@ -13,15 +13,11 @@ type ToolButtonType = {
 };
 
 export const ToolBar: FC<ToolButtonType> = ({ setTool, activeToolId }) => {
-  const handleToolChange = (tool: ToolType) => {
-    setTool(tool);
-  };
-
   return (
     <div className={S.Container}>
-      <Pen activeToolId={activeToolId} setTool={handleToolChange} />
-      <Brush activeToolId={activeToolId} setTool={handleToolChange} />
-      <Eraser activeToolId={activeToolId} setTool={handleToolChange} />
+      <Pen activeToolId={activeToolId} setTool={setTool} />
+      <Brush activeToolId={activeToolId} setTool={setTool} />
+      <Eraser activeToolId={activeToolId} setTool={setTool} />
     </div>
   );
 };

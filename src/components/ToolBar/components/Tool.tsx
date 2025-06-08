@@ -1,10 +1,11 @@
 import type { FC } from "react";
-import type { ToolConfigType } from "../../../types/tools.type";
+import type { ToolButtonType } from "../../../types/tools.type";
 import * as S from "./Tool.css";
 
 type ToolButtonProps = {
-  config: ToolConfigType;
+  config: ToolButtonType;
   onClick: () => void;
+  color?: string;
   isCurrentTool?: boolean;
   className?: string;
 };
@@ -12,6 +13,7 @@ type ToolButtonProps = {
 export const Tool: FC<ToolButtonProps> = ({
   config,
   onClick,
+  color,
   isCurrentTool = false,
   className,
 }) => {
@@ -23,14 +25,14 @@ export const Tool: FC<ToolButtonProps> = ({
       aria-label={label}
       type="button"
       aria-pressed={isCurrentTool}
-      data-tool={config.id}
+      data-tool={config.type}
       className={
         S.Button +
         (className ? ` ${className}` : "") +
         (isCurrentTool ? " active" : "")
       }
     >
-      <Icon size={iconSize} />
+      <Icon size={iconSize} color={color} />
     </button>
   );
 };

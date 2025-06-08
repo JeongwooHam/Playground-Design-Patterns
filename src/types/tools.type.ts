@@ -1,32 +1,57 @@
-import type { ComponentType, SVGProps } from "react";
+import type { IconType } from "react-icons";
 
-export type ToolType = "pencil" | "brush" | "eraser";
+export type PointType = { x: number; y: number };
 
-export type ToolConfigType = {
-  id: ToolType;
+export type ToolType = "pencil" | "brush" | "eraser" | string;
+
+export type ToolButtonType = {
+  type: ToolType;
   label: string;
-  icon: ComponentType<{ size?: number } & SVGProps<SVGSVGElement>>;
-  iconSize: number;
-  hasOptions: boolean;
+  icon: IconType;
+  iconSize?: number;
+  color?: string;
+  [key: string]: unknown;
 };
 
-export type PenOptionsType = {
-  color: string;
-  size: number;
+export interface BaseToolOptions {
+  color?: string;
+  lineWidth?: number;
+}
+
+export interface ToolInitializerType extends BaseToolOptions {
+  id: string;
+  name: string;
+  icon?: IconType;
+  [key: string]: unknown;
+}
+
+export interface Tool extends BaseToolOptions {
+  id: string;
+  name: string;
+  icon?: IconType;
+  render: (ctx: CanvasRenderingContext2D, shapeData: any) => void;
+  onPointerDown?: (point: PointType, ctx: DrawingContextType) => void;
+  onPointerMove?: (point: PointType, ctx: DrawingContextType) => void;
+  onPointerUp?: (point: PointType, ctx: DrawingContextType) => void;
+  hitTest?: (point: PointType, ctx: DrawingObjectType) => boolean;
+}
+
+export type ToolConstructorType<
+  T extends Tool,
+  O extends ToolInitializerType = ToolInitializerType
+> = new (options: O) => T;
+
+export type DrawingContextType = {
+  addObject: (object: DrawingObjectType) => void;
+  removeObject: (
+    isRemoveTarget: (object: DrawingObjectType) => boolean
+  ) => void;
+  getCurrentObjects: () => DrawingObjectType[];
+  getToolInstance: (toolId: string) => Tool | undefined;
 };
 
-export type BrushOptionsType = {
-  borderColor: string;
-  fillColor: string;
-  size: number;
-};
-
-export type EraserOptionsType = {
-  size: number;
-};
-
-export type ToolOptions = {
-  pencil: PenOptionsType;
-  brush: BrushOptionsType;
-  eraser: EraserOptionsType;
+export type DrawingObjectType = {
+  toolId: string;
+  shape: unknown;
+  properties: Record<string, unknown>;
 };

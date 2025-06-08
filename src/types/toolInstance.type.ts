@@ -2,6 +2,23 @@ import type { IconType } from "react-icons";
 
 export type PointType = { x: number; y: number };
 
+export type RenderFunctionType = (
+  ctx: CanvasRenderingContext2D,
+  shapeData: any
+) => void;
+export type PointerFunctionType = (
+  point: PointType,
+  ctx: DrawingContextType
+) => void;
+export type HitTestFunctionType = (
+  point: PointType,
+  ctx: DrawingObjectType
+) => boolean;
+export type SetToolFunctionType = (
+  toolId: string,
+  options?: BaseToolOptions
+) => void;
+
 export interface BaseToolOptions {
   color?: string;
   lineWidth?: number;
@@ -18,11 +35,11 @@ export interface Tool extends BaseToolOptions {
   id: string;
   name: string;
   icon?: IconType;
-  render: (ctx: CanvasRenderingContext2D, shapeData: any) => void;
-  onPointerDown?: (point: PointType, ctx: DrawingContextType) => void;
-  onPointerMove?: (point: PointType, ctx: DrawingContextType) => void;
-  onPointerUp?: (point: PointType, ctx: DrawingContextType) => void;
-  hitTest?: (point: PointType, ctx: DrawingObjectType) => boolean;
+  render: RenderFunctionType;
+  onPointerDown?: PointerFunctionType;
+  onPointerMove?: PointerFunctionType;
+  onPointerUp?: PointerFunctionType;
+  hitTest?: HitTestFunctionType;
 }
 
 export type ToolConstructorType<

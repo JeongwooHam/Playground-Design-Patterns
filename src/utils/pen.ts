@@ -3,7 +3,7 @@ import type {
   PointType,
   Tool,
   ToolInitializerType,
-} from "../types/tools.type";
+} from "../types/toolInstance.type";
 
 interface PenToolOptions extends ToolInitializerType {
   id: string;

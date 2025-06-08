@@ -1,6 +1,7 @@
 import type { FC } from "react";
 import { TOOL_CONFIG } from "../../constants/tools";
-import type { BaseToolOptions, ToolType } from "../../types/tools.type";
+import type { ToolType } from "../../types/buttonConfig.type";
+import type { BaseToolOptions } from "../../types/toolInstance.type";
 import { Tool } from "./components/Tool";
 import * as S from "./ToolBar.css";
 

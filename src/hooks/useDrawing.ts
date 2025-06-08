@@ -6,7 +6,7 @@ import type {
   TempDrawingObjectType,
   Tool,
   ToolConstructorType,
-} from "../types/tools.type";
+} from "../types/toolInstance.type";
 import { getPoint } from "../utils/point";
 
 type ToolRegistryType = {

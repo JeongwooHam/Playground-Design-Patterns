@@ -1,5 +1,5 @@
 import { FaArrowRotateLeft, FaArrowRotateRight } from "react-icons/fa6";
-import type { ActionConfigType } from "../types/actions.type";
+import type { ActionConfigType } from "../types/buttonConfig.type";
 
 export const ACTION_CONFIG: Record<string, ActionConfigType> = {
   undo: {

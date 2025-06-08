@@ -1,5 +1,5 @@
 import { FaEraser, FaPencil, FaPenRuler } from "react-icons/fa6";
-import type { ToolButtonType } from "../types/tools.type";
+import type { ToolButtonType } from "../types/buttonConfig.type";
 
 export const TOOL_CONFIG: Record<string, ToolButtonType> = {
   pen: {

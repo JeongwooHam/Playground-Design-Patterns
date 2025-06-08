@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import type { ToolButtonType } from "../../../types/tools.type";
+import type { ToolButtonType } from "../../../types/buttonConfig.type";
 import * as S from "./Tool.css";
 
 type ToolButtonProps = {

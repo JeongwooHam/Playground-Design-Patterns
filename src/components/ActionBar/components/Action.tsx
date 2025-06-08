@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import type { FC } from "react";
-import type { ActionConfigType } from "../../../types/actions.type";
+import type { ActionConfigType } from "../../../types/buttonConfig.type";
 import * as S from "./Action.css";
 
 type ActionButtonProps = {

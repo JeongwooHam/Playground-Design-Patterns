@@ -3,7 +3,7 @@ import { ActionBar } from "./components/ActionBar";
 import { Canvas } from "./components/Canvas";
 import { ToolBar } from "./components/ToolBar";
 import { useDrawing } from "./hooks/useDrawing";
-import { PenTool } from "./utils/pen";
+import { PenTool } from "./libs/pen";
 
 function App() {
   const { canvasRef, setTool, activeToolId, undo, redo, canUndo, canRedo } =

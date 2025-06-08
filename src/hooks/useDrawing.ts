@@ -10,7 +10,7 @@ import type {
 import { getPoint } from "../utils/point";
 
 type ToolRegistryType = {
-  [id: string]: ToolConstructorType<any, any>;
+  [id: string]: ToolConstructorType<Tool, ToolInitializerType>;
 };
 
 export const useDrawing = (toolRegistry: ToolRegistryType) => {

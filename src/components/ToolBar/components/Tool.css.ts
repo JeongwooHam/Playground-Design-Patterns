@@ -18,3 +18,7 @@ export const Button = style({
     },
   },
 });
+
+export const Icon = style({
+  transition: "transform 0.2s ease",
+});

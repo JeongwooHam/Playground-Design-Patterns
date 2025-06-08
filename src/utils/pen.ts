@@ -21,6 +21,7 @@ export class PenTool implements Tool {
   private isDrawing: boolean = false;
   private lastPoint: PointType | null = null;
   private currentPath: PointType[] = [];
+  private tempObjectId: string | null = null;
 
   constructor(options: PenToolOptions) {
     this.id = options.id;
@@ -46,29 +47,37 @@ export class PenTool implements Tool {
     ctx.stroke();
   }
 
-  onPointerDown = (point: PointType) => {
+  onPointerDown = (point: PointType, ctx: DrawingContextType) => {
     this.isDrawing = true;
     this.lastPoint = point;
     this.currentPath = [point];
-  };
 
-  onPointerMove = (point: PointType, ctx: DrawingContextType) => {
-    if (!this.isDrawing || !this.lastPoint) return;
-    this.currentPath.push(point);
-
-    ctx.addObject({
+    this.tempObjectId = `temp-${Date.now()}-${Math.random()}`;
+    ctx.addTempObject({
+      id: this.tempObjectId,
       toolId: this.id,
       shape: { path: this.currentPath },
       properties: { color: this.color, lineWidth: this.lineWidth },
+    });
+  };
+
+  onPointerMove = (point: PointType, ctx: DrawingContextType) => {
+    if (!this.isDrawing || !this.lastPoint || !this.tempObjectId) return;
+    this.currentPath.push(point);
+
+    ctx.updateTempObject(this.tempObjectId, {
+      shape: { path: [...this.currentPath] },
     });
 
     this.lastPoint = point;
   };
 
   onPointerUp = (point: PointType, ctx: DrawingContextType) => {
-    if (!this.isDrawing) return;
+    if (!this.isDrawing || !this.tempObjectId) return;
     this.isDrawing = false;
     this.currentPath.push(point);
+
+    ctx.removeTempObject(this.tempObjectId);
 
     if (this.currentPath.length > 1) {
       ctx.addObject({
@@ -79,5 +88,6 @@ export class PenTool implements Tool {
     }
     this.currentPath = [];
     this.lastPoint = null;
+    this.tempObjectId = null;
   };
 }

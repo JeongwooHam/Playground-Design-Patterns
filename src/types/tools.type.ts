@@ -2,7 +2,7 @@ import type { IconType } from "react-icons";
 
 export type PointType = { x: number; y: number };
 
-export type ToolType = "pencil" | "brush" | "eraser" | string;
+export type ToolType = "pen" | "brush" | "eraser" | string;
 
 export type ToolButtonType = {
   type: ToolType;
@@ -43,9 +43,15 @@ export type ToolConstructorType<
 
 export type DrawingContextType = {
   addObject: (object: DrawingObjectType) => void;
+  addTempObject: (object: TempDrawingObjectType) => void;
+  updateTempObject: (
+    id: string,
+    updates: Partial<Omit<TempDrawingObjectType, "id">>
+  ) => void;
   removeObject: (
     isRemoveTarget: (object: DrawingObjectType) => boolean
   ) => void;
+  removeTempObject: (id: string) => void;
   getCurrentObjects: () => DrawingObjectType[];
   getToolInstance: (toolId: string) => Tool | undefined;
 };
@@ -55,3 +61,5 @@ export type DrawingObjectType = {
   shape: unknown;
   properties: Record<string, unknown>;
 };
+
+export type TempDrawingObjectType = DrawingObjectType & { id: string };

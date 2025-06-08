@@ -3,6 +3,7 @@ import type {
   BaseToolOptions,
   DrawingContextType,
   DrawingObjectType,
+  TempDrawingObjectType,
   Tool,
   ToolConstructorType,
 } from "../types/tools.type";
@@ -15,20 +16,45 @@ type ToolRegistryType = {
 export const useDrawing = (toolRegistry: ToolRegistryType) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [objects, setObjects] = useState<DrawingObjectType[]>([]);
+  const [tempObjects, setTempObjects] = useState<TempDrawingObjectType[]>([]);
+
+  const [history, setHistory] = useState<DrawingObjectType[][]>([]);
+  const [redoStack, setRedoStack] = useState<DrawingObjectType[][]>([]);
 
   const [activeTool, setActiveTool] = useState<Tool | null>(null);
   const [activeToolId, setActiveToolId] = useState<string | null>(null);
 
   const addObject = (obj: DrawingObjectType) => {
     setObjects((prevObjects) => {
+      setHistory((h) => [...h, prevObjects]);
+      setRedoStack([]);
       return [...prevObjects, obj];
     });
   };
 
+  const addTempObject = (obj: TempDrawingObjectType) => {
+    setTempObjects((prev) => [...prev, obj]);
+  };
+
+  const updateTempObject = (
+    id: string,
+    updates: Partial<Omit<TempDrawingObjectType, "id">>
+  ) => {
+    setTempObjects((prev) =>
+      prev.map((obj) => (obj.id === id ? { ...obj, updates } : obj))
+    );
+  };
+
   const removeObject = (pred: (obj: DrawingObjectType) => boolean) => {
     setObjects((prevObjects) => {
+      setHistory((h) => [...h, prevObjects]);
+      setRedoStack([]);
       return prevObjects.filter((o) => !pred(o));
     });
+  };
+
+  const removeTempObject = (id: string) => {
+    setTempObjects((prev) => prev.filter((obj) => obj.id !== id));
   };
 
   const getCurrentObjects = () => objects;
@@ -43,12 +69,31 @@ export const useDrawing = (toolRegistry: ToolRegistryType) => {
   const ctx: DrawingContextType = useMemo(
     () => ({
       addObject,
+      addTempObject,
+      updateTempObject,
       removeObject,
+      removeTempObject,
       getCurrentObjects,
       getToolInstance,
     }),
     [objects, activeTool]
   );
+
+  const undo = useCallback(() => {
+    if (history.length === 0) return;
+    const prev = history[history.length - 1];
+    setHistory(history.slice(0, -1));
+    setRedoStack([objects, ...redoStack]);
+    setObjects(prev);
+  }, [history, objects, redoStack]);
+
+  const redo = useCallback(() => {
+    if (redoStack.length === 0) return;
+    const [next, ...rest] = redoStack;
+    setHistory([...history, objects]);
+    setRedoStack(rest);
+    setObjects(next);
+  }, [redoStack, history, objects]);
 
   const onPointerDown = useCallback(
     (e: PointerEvent) => {
@@ -83,7 +128,6 @@ export const useDrawing = (toolRegistry: ToolRegistryType) => {
   useEffect(
     function onHandleEventListener() {
       const canvas = canvasRef.current;
-      console.log("useDrawing: canvas", canvas);
       if (!canvas) return;
 
       canvas.removeEventListener("pointerdown", onPointerDown);
@@ -118,8 +162,16 @@ export const useDrawing = (toolRegistry: ToolRegistryType) => {
           tempToolInstance.render(context, obj.shape);
         }
       });
+
+      tempObjects.forEach((obj) => {
+        const toolClass = toolRegistry[obj.toolId];
+        if (toolClass) {
+          const tempToolInstance = new toolClass(obj.properties);
+          tempToolInstance.render(context, obj.shape);
+        }
+      });
     },
-    [objects, toolRegistry]
+    [objects, tempObjects, toolRegistry]
   );
 
   const setTool = useCallback(
@@ -139,6 +191,10 @@ export const useDrawing = (toolRegistry: ToolRegistryType) => {
     canvasRef,
     setTool,
     activeToolId,
+    undo,
+    redo,
+    canUndo: history.length > 0,
+    canRedo: redoStack.length > 0,
     objects,
   };
 };

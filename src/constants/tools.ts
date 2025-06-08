@@ -2,9 +2,9 @@ import { FaEraser, FaPencil, FaPenRuler } from "react-icons/fa6";
 import type { ToolButtonType } from "../types/tools.type";
 
 export const TOOL_CONFIG: Record<string, ToolButtonType> = {
-  pencil: {
-    type: "pencil",
-    label: "Pencil",
+  pen: {
+    type: "pen",
+    label: "Pen",
     icon: FaPencil,
     iconSize: 24,
     hasOptions: true,

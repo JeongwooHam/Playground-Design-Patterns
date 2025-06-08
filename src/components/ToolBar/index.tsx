@@ -16,24 +16,47 @@ export const ToolBar: FC<ToolButtonType> = ({ setTool, activeToolId }) => {
 
   return (
     <div className={S.Container}>
-      <Tool
-        key={TOOL_CONFIG.pencil.type}
-        config={TOOL_CONFIG.pencil}
-        onClick={() => handleToolChange(TOOL_CONFIG.pencil.type)}
-        isCurrentTool={activeToolId === TOOL_CONFIG.pencil.type}
-      />
-      <Tool
-        key={TOOL_CONFIG.brush.type}
-        config={TOOL_CONFIG.brush}
-        onClick={() => handleToolChange(TOOL_CONFIG.brush.type)}
-        isCurrentTool={activeToolId === TOOL_CONFIG.brush.type}
-      />
-      <Tool
-        key={TOOL_CONFIG.eraser.type}
-        config={TOOL_CONFIG.eraser}
-        onClick={() => handleToolChange(TOOL_CONFIG.eraser.type)}
-        isCurrentTool={activeToolId === TOOL_CONFIG.eraser.type}
-      />
+      <Pen activeToolId={activeToolId} handleToolChange={handleToolChange} />
+      <Brush activeToolId={activeToolId} handleToolChange={handleToolChange} />
+      <Eraser activeToolId={activeToolId} handleToolChange={handleToolChange} />
     </div>
+  );
+};
+
+type ToolProps = {
+  activeToolId: string | null;
+  handleToolChange: (tool: ToolType) => void;
+};
+
+const Pen: FC<ToolProps> = ({ activeToolId, handleToolChange }) => {
+  return (
+    <Tool
+      key={TOOL_CONFIG.pen.type}
+      config={TOOL_CONFIG.pen}
+      onClick={() => handleToolChange(TOOL_CONFIG.pen.type)}
+      isCurrentTool={activeToolId === TOOL_CONFIG.pen.type}
+    />
+  );
+};
+
+const Brush: FC<ToolProps> = ({ activeToolId, handleToolChange }) => {
+  return (
+    <Tool
+      key={TOOL_CONFIG.brush.type}
+      config={TOOL_CONFIG.brush}
+      onClick={() => handleToolChange(TOOL_CONFIG.brush.type)}
+      isCurrentTool={activeToolId === TOOL_CONFIG.brush.type}
+    />
+  );
+};
+
+const Eraser: FC<ToolProps> = ({ activeToolId, handleToolChange }) => {
+  return (
+    <Tool
+      key={TOOL_CONFIG.eraser.type}
+      config={TOOL_CONFIG.eraser}
+      onClick={() => handleToolChange(TOOL_CONFIG.eraser.type)}
+      isCurrentTool={activeToolId === TOOL_CONFIG.eraser.type}
+    />
   );
 };

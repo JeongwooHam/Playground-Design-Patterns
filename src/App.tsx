@@ -6,13 +6,14 @@ import { useDrawing } from "./hooks/useDrawing";
 import { PenTool } from "./utils/pen";
 
 function App() {
-  const { canvasRef, setTool, activeToolId } = useDrawing({
-    pen: PenTool,
-  });
+  const { canvasRef, setTool, activeToolId, undo, redo, canUndo, canRedo } =
+    useDrawing({
+      pen: PenTool,
+    });
 
   return (
     <div className={S.Container}>
-      <ActionBar />
+      <ActionBar undo={undo} redo={redo} canUndo={canUndo} canRedo={canRedo} />
       <Canvas canvasRef={canvasRef} />
       <ToolBar setTool={setTool} activeToolId={activeToolId} />
     </div>

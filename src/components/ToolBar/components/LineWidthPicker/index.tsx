@@ -6,17 +6,21 @@ import * as S from "./LineWidthPicker.css";
 type LineWidthPickerProps = {
   tool: ToolType;
   setTool: SetToolFunctionType;
+  optionKey: string;
   min?: number;
   max?: number;
   isRendered?: boolean;
+  label?: string;
 };
 
 export const LineWidthPicker: FC<LineWidthPickerProps> = ({
   tool,
   setTool,
+  optionKey,
   min = 1,
   max = 10,
   isRendered = false,
+  label = "Line Width",
 }) => {
   const [lineWidth, setLineWidth] = useState<number>(1);
   const onLineWidthChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -24,7 +28,7 @@ export const LineWidthPicker: FC<LineWidthPickerProps> = ({
     if (isNaN(newLineWidth)) return;
 
     setLineWidth(newLineWidth);
-    setTool(tool, { lineWidth: newLineWidth });
+    setTool(tool, { [optionKey]: newLineWidth });
   };
 
   if (!isRendered) {
@@ -33,7 +37,9 @@ export const LineWidthPicker: FC<LineWidthPickerProps> = ({
 
   return (
     <div className={S.Container}>
-      <label>Line Width: {lineWidth}px</label>
+      <label>
+        {label}: {lineWidth}px
+      </label>
       <input
         type="range"
         value={lineWidth}

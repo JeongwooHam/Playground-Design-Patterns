@@ -47,11 +47,13 @@ const Pen: FC<ToolProps> = ({ activeToolId, setTool }) => {
       <ColorPicker
         tool={TOOL_CONFIG.pen.type}
         setTool={setTool}
+        optionKey="color"
         isRendered={isCurrentTool}
       />
       <LineWidthPicker
         tool={TOOL_CONFIG.pen.type}
         setTool={setTool}
+        optionKey="lineWidth"
         min={1}
         max={10}
         isRendered={isCurrentTool}
@@ -61,17 +63,43 @@ const Pen: FC<ToolProps> = ({ activeToolId, setTool }) => {
 };
 
 const Brush: FC<ToolProps> = ({ activeToolId, setTool }) => {
+  const isCurrentTool = useMemo(() => {
+    return activeToolId === TOOL_CONFIG.brush.type;
+  }, [activeToolId]);
+
   const handleToolChange = (tool: ToolType) => {
     setTool(tool);
   };
 
   return (
-    <Tool
-      key={TOOL_CONFIG.brush.type}
-      config={TOOL_CONFIG.brush}
-      onClick={() => handleToolChange(TOOL_CONFIG.brush.type)}
-      isCurrentTool={activeToolId === TOOL_CONFIG.brush.type}
-    />
+    <div className={S.ToolBox}>
+      <Tool
+        key={TOOL_CONFIG.brush.type}
+        config={TOOL_CONFIG.brush}
+        onClick={() => handleToolChange(TOOL_CONFIG.brush.type)}
+        isCurrentTool={activeToolId === TOOL_CONFIG.brush.type}
+      />
+      <ColorPicker
+        tool={TOOL_CONFIG.pen.type}
+        setTool={setTool}
+        optionKey="color"
+        isRendered={isCurrentTool}
+      />
+      <LineWidthPicker
+        tool={TOOL_CONFIG.pen.type}
+        setTool={setTool}
+        optionKey="lineWidth"
+        min={1}
+        max={10}
+        isRendered={isCurrentTool}
+      />
+      <ColorPicker
+        tool={TOOL_CONFIG.pen.type}
+        setTool={setTool}
+        optionKey="fillColor"
+        isRendered={isCurrentTool}
+      />
+    </div>
   );
 };
 

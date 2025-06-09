@@ -1,11 +1,11 @@
-import type { FC, RefObject } from "react";
+import type { RefObject } from "react";
 import * as S from "./Canvas.css";
 
 type CanvasProps = {
   canvasRef: RefObject<HTMLCanvasElement | null>;
 };
 
-export const Canvas: FC<CanvasProps> = ({ canvasRef }) => {
+export const Canvas = ({ canvasRef }: CanvasProps) => {
   return (
     <div className={S.Container}>
       <canvas

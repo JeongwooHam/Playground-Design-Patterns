@@ -1,4 +1,4 @@
-import { useMemo, type FC } from "react";
+import { useMemo } from "react";
 import { TOOL_CONFIG } from "../../constants/tools";
 import type { ToolType } from "../../types/buttonConfig.type";
 import type { SetToolFunctionType } from "../../types/toolInstance.type";
@@ -12,7 +12,7 @@ type ToolButtonType = {
   activeToolId: string | null;
 };
 
-export const ToolBar: FC<ToolButtonType> = ({ setTool, activeToolId }) => {
+export const ToolBar = ({ setTool, activeToolId }: ToolButtonType) => {
   return (
     <div className={S.Container}>
       <Pen activeToolId={activeToolId} setTool={setTool} />
@@ -27,7 +27,7 @@ type ToolProps = {
   setTool: SetToolFunctionType;
 };
 
-const Pen: FC<ToolProps> = ({ activeToolId, setTool }) => {
+const Pen = ({ activeToolId, setTool }: ToolProps) => {
   const isCurrentTool = useMemo(() => {
     return activeToolId === TOOL_CONFIG.pen.type;
   }, [activeToolId]);
@@ -62,7 +62,7 @@ const Pen: FC<ToolProps> = ({ activeToolId, setTool }) => {
   );
 };
 
-const Brush: FC<ToolProps> = ({ activeToolId, setTool }) => {
+const Brush = ({ activeToolId, setTool }: ToolProps) => {
   const isCurrentTool = useMemo(() => {
     return activeToolId === TOOL_CONFIG.brush.type;
   }, [activeToolId]);
@@ -103,7 +103,7 @@ const Brush: FC<ToolProps> = ({ activeToolId, setTool }) => {
   );
 };
 
-const Eraser: FC<ToolProps> = ({ activeToolId, setTool }) => {
+const Eraser = ({ activeToolId, setTool }: ToolProps) => {
   const handleToolChange = (tool: ToolType) => {
     setTool(tool);
   };

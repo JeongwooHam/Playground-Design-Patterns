@@ -1,4 +1,4 @@
-import { useState, type ChangeEvent, type FC } from "react";
+import { useState, type ChangeEvent } from "react";
 import type { ToolType } from "../../../../types/buttonConfig.type";
 import type { ColorType } from "../../../../types/color.type";
 import type { SetToolFunctionType } from "../../../../types/toolInstance.type";
@@ -13,13 +13,13 @@ type ColorPickerProps = {
   label?: string;
 };
 
-export const ColorPicker: FC<ColorPickerProps> = ({
+export const ColorPicker = ({
   tool,
   setTool,
   optionKey,
   isRendered = false,
   label = "Color",
-}) => {
+}: ColorPickerProps) => {
   const [color, setColor] = useState<ColorType>("#000000");
   const onColorChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (!isColorType(e.target.value)) return;

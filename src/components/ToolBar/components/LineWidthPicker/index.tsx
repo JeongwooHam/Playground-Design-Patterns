@@ -1,4 +1,4 @@
-import { useState, type ChangeEvent, type FC } from "react";
+import { useState, type ChangeEvent } from "react";
 import type { ToolType } from "../../../../types/buttonConfig.type";
 import type { SetToolFunctionType } from "../../../../types/toolInstance.type";
 import * as S from "./LineWidthPicker.css";
@@ -13,7 +13,7 @@ type LineWidthPickerProps = {
   label?: string;
 };
 
-export const LineWidthPicker: FC<LineWidthPickerProps> = ({
+export const LineWidthPicker = ({
   tool,
   setTool,
   optionKey,
@@ -21,7 +21,7 @@ export const LineWidthPicker: FC<LineWidthPickerProps> = ({
   max = 10,
   isRendered = false,
   label = "Line Width",
-}) => {
+}: LineWidthPickerProps) => {
   const [lineWidth, setLineWidth] = useState<number>(1);
   const onLineWidthChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newLineWidth = parseInt(e.target.value);

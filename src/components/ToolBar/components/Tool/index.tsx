@@ -1,4 +1,4 @@
-import type { FC } from "react";
+import clsx from "clsx";
 import type { ToolButtonType } from "../../../../types/buttonConfig.type";
 import * as S from "./Tool.css";
 
@@ -10,13 +10,13 @@ type ToolButtonProps = {
   className?: string;
 };
 
-export const Tool: FC<ToolButtonProps> = ({
+export const Tool = ({
   config,
   onClick,
   color,
   isCurrentTool = false,
   className,
-}) => {
+}: ToolButtonProps) => {
   const { icon: Icon, iconSize, label } = config;
   return (
     <button
@@ -26,11 +26,7 @@ export const Tool: FC<ToolButtonProps> = ({
       type="button"
       aria-pressed={isCurrentTool}
       data-tool={config.type}
-      className={
-        S.Button +
-        (className ? ` ${className}` : "") +
-        (isCurrentTool ? " active" : "")
-      }
+      className={clsx(S.Button, className, { [S.Active]: isCurrentTool })}
     >
       <Icon size={iconSize} color={color} />
     </button>

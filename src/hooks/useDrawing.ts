@@ -45,11 +45,11 @@ export const useDrawing = (toolRegistry: ToolRegistryType) => {
     );
   };
 
-  const removeObject = (pred: (obj: DrawingObjectType) => boolean) => {
+  const removeObject = (prev: (obj: DrawingObjectType) => boolean) => {
     setObjects((prevObjects) => {
       setHistory((h) => [...h, prevObjects]);
       setRedoStack([]);
-      return prevObjects.filter((o) => !pred(o));
+      return prevObjects.filter((o) => !prev(o));
     });
   };
 

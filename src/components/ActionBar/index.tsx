@@ -1,4 +1,3 @@
-import type { FC } from "react";
 import { ACTION_CONFIG } from "../../constants/actions";
 import * as S from "./ActionBar.css";
 import { Action } from "./components/Action";
@@ -10,12 +9,12 @@ type ActionButtonType = {
   canRedo: boolean;
 };
 
-export const ActionBar: FC<ActionButtonType> = ({
+export const ActionBar = ({
   undo,
   redo,
   canUndo,
   canRedo,
-}) => {
+}: ActionButtonType) => {
   return (
     <div className={S.Container}>
       <Action config={ACTION_CONFIG.undo} onClick={undo} isActive={canUndo} />

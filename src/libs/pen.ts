@@ -63,6 +63,15 @@ export class PenTool implements Tool {
 
   onPointerMove = (point: PointType, ctx: DrawingContextType) => {
     if (!this.isDrawing || !this.lastPoint || !this.tempObjectId) return;
+
+    // 두 점 사이의 직선 거리(실제 거리)를 구합니다.
+    const distance = Math.sqrt(
+      Math.pow(point.x - this.lastPoint.x, 2) +
+        Math.pow(point.y - this.lastPoint.y, 2)
+    );
+
+    if (distance < 2) return;
+
     this.currentPath.push(point);
 
     ctx.updateTempObject(this.tempObjectId, {

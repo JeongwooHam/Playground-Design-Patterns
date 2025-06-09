@@ -1,5 +1,4 @@
 import clsx from "clsx";
-import type { FC } from "react";
 import type { ActionConfigType } from "../../../types/buttonConfig.type";
 import * as S from "./Action.css";
 
@@ -10,12 +9,12 @@ type ActionButtonProps = {
   className?: string;
 };
 
-export const Action: FC<ActionButtonProps> = ({
+export const Action = ({
   config,
   onClick,
   isActive = false,
   className,
-}) => {
+}: ActionButtonProps) => {
   const { icon: Icon, iconSize, label } = config;
   return (
     <button

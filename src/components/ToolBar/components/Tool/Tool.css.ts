@@ -22,3 +22,6 @@ export const Button = style({
 export const Icon = style({
   transition: "transform 0.2s ease",
 });
+
+// @Todo: Active 상태의 버튼 UI 고민해보기
+export const Active = style({});

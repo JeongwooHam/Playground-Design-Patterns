@@ -4,6 +4,7 @@ import type {
   Tool,
   ToolInitializerType,
 } from "../types/toolInstance.type";
+import { getDistance } from "../utils/point";
 
 interface PenToolOptions extends ToolInitializerType {
   id: string;
@@ -65,10 +66,7 @@ export class PenTool implements Tool {
     if (!this.isDrawing || !this.lastPoint || !this.tempObjectId) return;
 
     // 두 점 사이의 직선 거리(실제 거리)를 구합니다.
-    const distance = Math.sqrt(
-      Math.pow(point.x - this.lastPoint.x, 2) +
-        Math.pow(point.y - this.lastPoint.y, 2)
-    );
+    const distance = getDistance(point, this.lastPoint);
 
     if (distance < 2) return;
 

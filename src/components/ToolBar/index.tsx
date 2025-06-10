@@ -80,13 +80,13 @@ const Brush = ({ activeToolId, setTool }: ToolProps) => {
         isCurrentTool={activeToolId === TOOL_CONFIG.brush.type}
       />
       <ColorPicker
-        tool={TOOL_CONFIG.pen.type}
+        tool={TOOL_CONFIG.brush.type}
         setTool={setTool}
         optionKey="color"
         isRendered={isCurrentTool}
       />
       <LineWidthPicker
-        tool={TOOL_CONFIG.pen.type}
+        tool={TOOL_CONFIG.brush.type}
         setTool={setTool}
         optionKey="lineWidth"
         min={1}
@@ -94,7 +94,7 @@ const Brush = ({ activeToolId, setTool }: ToolProps) => {
         isRendered={isCurrentTool}
       />
       <ColorPicker
-        tool={TOOL_CONFIG.pen.type}
+        tool={TOOL_CONFIG.brush.type}
         setTool={setTool}
         optionKey="fillColor"
         isRendered={isCurrentTool}

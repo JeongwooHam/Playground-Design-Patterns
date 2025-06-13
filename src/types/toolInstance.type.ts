@@ -23,6 +23,7 @@ export interface BaseToolOptions {
 }
 
 export interface ToolInitializerType extends BaseToolOptions {
+  id: string;
   [key: string]: unknown;
 }
 
@@ -57,9 +58,9 @@ export type DrawingContextType = {
   getToolInstance: (toolId: string) => Tool | undefined;
 };
 
-export type DrawingObjectType = {
+export type DrawingObjectType<S = unknown> = {
   toolId: string;
-  shape: unknown;
+  shape: S;
   properties: Record<string, unknown>;
 };
 

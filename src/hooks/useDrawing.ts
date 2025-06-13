@@ -158,7 +158,10 @@ export const useDrawing = (toolRegistry: ToolRegistryType) => {
       objects.forEach((obj) => {
         const toolClass = toolRegistry[obj.toolId];
         if (toolClass) {
-          const tempToolInstance = new toolClass(obj.properties);
+          const tempToolInstance = new toolClass({
+            ...obj.properties,
+            id: obj.toolId,
+          });
           tempToolInstance.render(context, obj.shape);
         }
       });
@@ -166,7 +169,10 @@ export const useDrawing = (toolRegistry: ToolRegistryType) => {
       tempObjects.forEach((obj) => {
         const toolClass = toolRegistry[obj.toolId];
         if (toolClass) {
-          const tempToolInstance = new toolClass(obj.properties);
+          const tempToolInstance = new toolClass({
+            ...obj.properties,
+            id: obj.toolId,
+          });
           tempToolInstance.render(context, obj.shape);
         }
       });

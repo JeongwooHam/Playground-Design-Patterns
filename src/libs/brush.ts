@@ -6,33 +6,43 @@ import type {
 } from "../types/toolInstance.type";
 import { getDistance } from "../utils/point";
 
-interface PenToolOptions extends ToolInitializerType {
+interface BrushToolOptions extends ToolInitializerType {
   id: string;
   color?: string;
   lineWidth?: number;
+  fillColor?: string;
 }
 
-export class PenTool implements Tool {
+export class BrushTool implements Tool {
   id: string;
 
-  name: string = "Pen";
+  name: string = "Brush";
   color: string;
   lineWidth: number;
+  fillColor: string;
 
   private isDrawing: boolean = false;
-  private lastPoint: PointType | null = null;
   private currentPath: PointType[] = [];
   private tempObjectId: string | null = null;
 
-  constructor(options: PenToolOptions) {
+  private completeShape(path: PointType[]): PointType[] {
+    if (path.length < 3) return path;
+
+    const startPoint = path[0];
+
+    return [...path, startPoint];
+  }
+
+  constructor(options: BrushToolOptions) {
     this.id = options.id;
     this.color = options.color || "#000000";
     this.lineWidth = options.lineWidth || 1;
+    this.fillColor = options.fillColor || this.color + "50";
   }
 
   render(
     ctx: CanvasRenderingContext2D,
-    shapeData: { path: PointType[] }
+    shapeData: { path: PointType[]; completed?: boolean }
   ): void {
     if (shapeData.path.length < 2 || !ctx) return;
     ctx.strokeStyle = this.color;
@@ -45,38 +55,46 @@ export class PenTool implements Tool {
       const point = shapeData.path[i];
       ctx.lineTo(point.x, point.y);
     }
+
+    if (shapeData.completed) {
+      ctx.closePath();
+      ctx.fillStyle = this.fillColor;
+      ctx.fill();
+    }
+
     ctx.stroke();
   }
 
   onPointerDown = (point: PointType, ctx: DrawingContextType) => {
     this.isDrawing = true;
-    this.lastPoint = point;
     this.currentPath = [point];
 
     this.tempObjectId = `temp-${Date.now()}-${Math.random()}`;
     ctx.addTempObject({
       id: this.tempObjectId,
       toolId: this.id,
-      shape: { path: this.currentPath },
-      properties: { color: this.color, lineWidth: this.lineWidth },
+      shape: { path: this.currentPath, completed: false },
+      properties: {
+        color: this.color,
+        lineWidth: this.lineWidth,
+        fillColor: this.fillColor,
+      },
     });
   };
 
   onPointerMove = (point: PointType, ctx: DrawingContextType) => {
-    if (!this.isDrawing || !this.lastPoint || !this.tempObjectId) return;
+    if (!this.isDrawing || !this.tempObjectId) return;
 
-    // 두 점 사이의 직선 거리(실제 거리)를 구합니다.
-    const distance = getDistance(point, this.lastPoint);
+    const lastPoint = this.currentPath[this.currentPath.length - 1];
+    const distance = getDistance(point, lastPoint);
 
     if (distance < 2) return;
 
     this.currentPath.push(point);
 
     ctx.updateTempObject(this.tempObjectId, {
-      shape: { path: [...this.currentPath] },
+      shape: { path: [...this.currentPath], completed: false },
     });
-
-    this.lastPoint = point;
   };
 
   onPointerUp = (point: PointType, ctx: DrawingContextType) => {
@@ -86,20 +104,32 @@ export class PenTool implements Tool {
 
     ctx.removeTempObject(this.tempObjectId);
 
-    if (this.currentPath.length > 1) {
+    if (this.currentPath.length > 2) {
+      const completedPath = this.completeShape(this.currentPath);
+
       ctx.addObject({
         toolId: this.id,
-        shape: { path: [...this.currentPath] },
-        properties: { color: this.color, lineWidth: this.lineWidth },
+        shape: { path: completedPath, completed: true },
+        properties: {
+          color: this.color,
+          lineWidth: this.lineWidth,
+          fillColor: this.fillColor,
+        },
       });
     }
     this.currentPath = [];
-    this.lastPoint = null;
     this.tempObjectId = null;
   };
 
-  updateOptions(options?: Partial<PenToolOptions>) {
+  updateOptions(options?: Partial<BrushToolOptions>) {
     if (!options) return;
+    // fillColor의 경우 지정되지 않으면 color의 50% opacity를 가지는 값으로 대체합니다.
+    if (options.fillColor) {
+      this.fillColor = options.fillColor;
+    } else if (options.color) {
+      this.fillColor = options.color + "50";
+    }
+
     Object.assign(this, options);
   }
 }

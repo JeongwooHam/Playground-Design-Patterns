@@ -8,20 +8,24 @@ import * as S from "./ColorPicker.css";
 type ColorPickerProps = {
   tool: ToolType;
   setTool: SetToolFunctionType;
+  optionKey: string;
   isRendered?: boolean;
+  label?: string;
 };
 
 export const ColorPicker = ({
   tool,
   setTool,
+  optionKey,
   isRendered = false,
+  label = "Color",
 }: ColorPickerProps) => {
   const [color, setColor] = useState<ColorType>("#000000");
   const onColorChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (!isColorType(e.target.value)) return;
 
     setColor(e.target.value);
-    setTool(tool, { color: e.target.value });
+    setTool(tool, { [optionKey]: e.target.value });
   };
 
   if (!isRendered) {
@@ -30,7 +34,9 @@ export const ColorPicker = ({
 
   return (
     <div className={S.Container}>
-      <label>color</label>
+      <label>
+        {label}: <span style={{ color }}>{color}</span>
+      </label>
       <input type="color" value={color} onChange={onColorChange} />
     </div>
   );

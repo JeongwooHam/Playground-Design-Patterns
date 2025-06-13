@@ -3,12 +3,14 @@ import { ActionBar } from "./components/ActionBar";
 import { Canvas } from "./components/Canvas";
 import { ToolBar } from "./components/ToolBar";
 import { useDrawing } from "./hooks/useDrawing";
+import { BrushTool } from "./libs/brush";
 import { PenTool } from "./libs/pen";
 
 function App() {
   const { canvasRef, setTool, activeToolId, undo, redo, canUndo, canRedo } =
     useDrawing({
       pen: PenTool,
+      brush: BrushTool,
     });
 
   return (

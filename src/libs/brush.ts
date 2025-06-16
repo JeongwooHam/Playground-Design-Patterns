@@ -1,10 +1,7 @@
 import { z } from "zod";
-import type {
-  DrawingContextType,
-  PointType,
-  Tool,
-} from "../types/toolInstance.type";
+import type { DrawingContextType, PointType } from "../types/toolInstance.type";
 import { getDistance } from "../utils/point";
+import { ToolBase } from "./toolBase";
 
 const BrushToolOptionsSchema = z.object({
   id: z.string(),
@@ -15,10 +12,10 @@ const BrushToolOptionsSchema = z.object({
 
 type BrushToolOptions = z.infer<typeof BrushToolOptionsSchema>;
 
-export class BrushTool implements Tool {
-  id: string;
+export class BrushTool extends ToolBase<BrushToolOptions> {
+  static schema = BrushToolOptionsSchema;
+  static toolName = "Brush";
 
-  name: string = "Brush";
   color: string;
   lineWidth: number;
   fillColor: string;
@@ -36,7 +33,7 @@ export class BrushTool implements Tool {
   }
 
   constructor(options: BrushToolOptions) {
-    this.id = options.id;
+    super(options);
     this.color = options.color || "#000000";
     this.lineWidth = options.lineWidth || 1;
     this.fillColor = options.fillColor || this.color + "50";
@@ -141,6 +138,7 @@ export class BrushTool implements Tool {
     }
   };
 
+  // 별도의 동작이 필요하여 기본 updateOptions를 오버라이딩합니다.
   updateOptions(options?: Partial<BrushToolOptions>) {
     if (!options) return;
     // fillColor의 경우 지정되지 않으면 color의 50% opacity를 가지는 값으로 대체합니다.

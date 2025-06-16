@@ -3,10 +3,10 @@ import type {
   DrawingContextType,
   DrawingObjectType,
   PointType,
-  Tool,
 } from "../types/toolInstance.type";
 import { getHighlightColor } from "../utils/color";
 import { isPathShapeObject } from "../utils/type";
+import { ToolBase } from "./toolBase";
 
 const EraserToolOptionsSchema = z.object({
   id: z.string(),
@@ -15,14 +15,15 @@ const EraserToolOptionsSchema = z.object({
 
 type EraserToolOptions = z.infer<typeof EraserToolOptionsSchema>;
 
-export class EraserTool implements Tool {
-  id: string;
-  name: string = "Eraser";
+export class EraserTool extends ToolBase<EraserToolOptions> {
+  static schema = EraserToolOptionsSchema;
+  static toolName = "Eraser";
+
   highlightColor: string;
 
   constructor(options: EraserToolOptions) {
-    this.id = options.id;
-    this.highlightColor = options.highlightColor || "#F7F008"; // 기본 강조 색은 노란색
+    super(options);
+    this.highlightColor = options.highlightColor || "#000000";
   }
 
   private isPointWithinEraseThreshold(
@@ -226,15 +227,4 @@ export class EraserTool implements Tool {
   onPointerUp = (_: PointType, ctx: DrawingContextType) => {
     ctx.removeTempObject("eraser-highlight");
   };
-
-  updateOptions(options?: Partial<EraserToolOptions>) {
-    if (!options) return;
-    // 유효하지 않은 option 값에 대해 예외를 발생시킵니다.
-    try {
-      EraserToolOptionsSchema.partial().parse(options);
-      Object.assign(this, options);
-    } catch (e) {
-      console.error("Invalid options provided to EraserTool:", e);
-    }
-  }
 }

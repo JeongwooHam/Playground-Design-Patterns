@@ -8,19 +8,12 @@ export type PointerFunctionType = (
   point: PointType,
   ctx: DrawingContextType
 ) => void;
-export type HitTestFunctionType = (
-  point: PointType,
-  ctx: DrawingObjectType
-) => boolean;
 export type SetToolFunctionType = (
   toolId: string,
   options?: ToolInitializerType
 ) => void;
 
-export interface BaseToolOptions {
-  color?: string;
-  lineWidth?: number;
-}
+export interface BaseToolOptions {}
 
 export interface ToolInitializerType extends BaseToolOptions {
   id: string;
@@ -35,7 +28,6 @@ export interface Tool extends BaseToolOptions {
   onPointerMove?: PointerFunctionType;
   onPointerUp?: PointerFunctionType;
   updateOptions?: (options?: ToolInitializerType) => void;
-  hitTest?: HitTestFunctionType;
 }
 
 export type ToolConstructorType<

@@ -58,3 +58,7 @@ export type DrawingObjectType<S = unknown> = {
 };
 
 export type TempDrawingObjectType = DrawingObjectType & { id: string };
+
+export type ToolRegistryType = {
+  [id: string]: ToolConstructorType<Tool, ToolInitializerType>;
+};

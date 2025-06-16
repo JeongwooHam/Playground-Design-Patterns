@@ -1,16 +1,18 @@
+import { z } from "zod";
 import type {
   DrawingContextType,
   PointType,
   Tool,
-  ToolInitializerType,
 } from "../types/toolInstance.type";
 import { getDistance } from "../utils/point";
 
-interface PenToolOptions extends ToolInitializerType {
-  id: string;
-  color?: string;
-  lineWidth?: number;
-}
+const PenToolOptionsSchema = z.object({
+  id: z.string(),
+  color: z.string().optional(),
+  lineWidth: z.number().optional(),
+});
+
+type PenToolOptions = z.infer<typeof PenToolOptionsSchema>;
 
 export class PenTool implements Tool {
   id: string;
@@ -118,6 +120,12 @@ export class PenTool implements Tool {
 
   updateOptions(options?: Partial<PenToolOptions>) {
     if (!options) return;
-    Object.assign(this, options);
+    // 유효하지 않은 option 값에 대해 예외를 발생시킵니다.
+    try {
+      PenToolOptionsSchema.partial().parse(options);
+      Object.assign(this, options);
+    } catch (e) {
+      console.error("Invalid options provided to PenTool:", e);
+    }
   }
 }

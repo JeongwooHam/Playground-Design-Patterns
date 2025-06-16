@@ -1,17 +1,19 @@
+import { z } from "zod";
 import type {
   DrawingContextType,
   PointType,
   Tool,
-  ToolInitializerType,
 } from "../types/toolInstance.type";
 import { getDistance } from "../utils/point";
 
-interface BrushToolOptions extends ToolInitializerType {
-  id: string;
-  color?: string;
-  lineWidth?: number;
-  fillColor?: string;
-}
+const BrushToolOptionsSchema = z.object({
+  id: z.string(),
+  color: z.string().optional(),
+  lineWidth: z.number().optional(),
+  fillColor: z.string().optional(),
+});
+
+type BrushToolOptions = z.infer<typeof BrushToolOptionsSchema>;
 
 export class BrushTool implements Tool {
   id: string;
@@ -148,6 +150,12 @@ export class BrushTool implements Tool {
       this.fillColor = options.color + "50";
     }
 
-    Object.assign(this, options);
+    // 유효하지 않은 option 값에 대해 예외를 발생시킵니다.
+    try {
+      BrushToolOptionsSchema.partial().parse(options);
+      Object.assign(this, options);
+    } catch (e) {
+      console.error("Invalid options provided to BrushTool:", e);
+    }
   }
 }

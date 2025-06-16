@@ -1,17 +1,19 @@
+import { z } from "zod";
 import type {
   DrawingContextType,
   DrawingObjectType,
   PointType,
   Tool,
-  ToolInitializerType,
 } from "../types/toolInstance.type";
 import { getHighlightColor } from "../utils/color";
 import { isPathShapeObject } from "../utils/type";
 
-interface EraserToolOptions extends ToolInitializerType {
-  id: string;
-  highlightColor?: string;
-}
+const EraserToolOptionsSchema = z.object({
+  id: z.string(),
+  highlightColor: z.string().optional(),
+});
+
+type EraserToolOptions = z.infer<typeof EraserToolOptionsSchema>;
 
 export class EraserTool implements Tool {
   id: string;
@@ -227,6 +229,12 @@ export class EraserTool implements Tool {
 
   updateOptions(options?: Partial<EraserToolOptions>) {
     if (!options) return;
-    Object.assign(this, options);
+    // 유효하지 않은 option 값에 대해 예외를 발생시킵니다.
+    try {
+      EraserToolOptionsSchema.partial().parse(options);
+      Object.assign(this, options);
+    } catch (e) {
+      console.error("Invalid options provided to EraserTool:", e);
+    }
   }
 }

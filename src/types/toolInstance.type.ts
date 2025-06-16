@@ -21,14 +21,14 @@ export interface ToolInitializerType extends BaseToolOptions {
   [key: string]: unknown;
 }
 
-export interface Tool extends BaseToolOptions {
+export interface Tool<O extends ToolInitializerType = ToolInitializerType> {
   id: string;
   name: string;
   render: RenderFunctionType;
   onPointerDown?: PointerFunctionType;
   onPointerMove?: PointerFunctionType;
   onPointerUp?: PointerFunctionType;
-  updateOptions?: (options?: ToolInitializerType) => void;
+  updateOptions?: (options?: Partial<O>) => void;
 }
 
 export type ToolConstructorType<

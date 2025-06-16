@@ -125,6 +125,16 @@ export const useDrawing = (toolRegistry: ToolRegistryType) => {
     [activeTool, ctx]
   );
 
+  const onPointerLeave = useCallback(
+    (e: PointerEvent) => {
+      const pt = getPoint(e);
+      if (activeTool) {
+        activeTool.onPointerUp?.(pt, ctx);
+      }
+    },
+    [activeTool, ctx]
+  );
+
   useEffect(
     function onHandleEventListener() {
       const canvas = canvasRef.current;
@@ -133,18 +143,21 @@ export const useDrawing = (toolRegistry: ToolRegistryType) => {
       canvas.removeEventListener("pointerdown", onPointerDown);
       canvas.removeEventListener("pointermove", onPointerMove);
       canvas.removeEventListener("pointerup", onPointerUp);
+      canvas.removeEventListener("pointerleave", onPointerLeave);
 
       canvas.addEventListener("pointerdown", onPointerDown);
       canvas.addEventListener("pointermove", onPointerMove);
       canvas.addEventListener("pointerup", onPointerUp);
+      canvas.addEventListener("pointerleave", onPointerLeave);
 
       return () => {
         canvas.removeEventListener("pointerdown", onPointerDown);
         canvas.removeEventListener("pointermove", onPointerMove);
         canvas.removeEventListener("pointerup", onPointerUp);
+        canvas.removeEventListener("pointerleave", onPointerLeave);
       };
     },
-    [onPointerDown, onPointerMove, onPointerUp]
+    [onPointerDown, onPointerMove, onPointerUp, onPointerLeave]
   );
 
   useEffect(

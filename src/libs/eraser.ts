@@ -47,6 +47,25 @@ export class EraserTool implements Tool {
     return false;
   }
 
+  // 현재 포인터가 Path로 둘러싸인 다각형 내부에 있는지 검사하는 함수
+  private isPointInPolygon(point: PointType, polygon: PointType[]): boolean {
+    let inside = false;
+
+    for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+      const xi = polygon[i].x,
+        yi = polygon[i].y;
+      const xj = polygon[j].x,
+        yj = polygon[j].y;
+      const intersect =
+        yi > point.y !== yj > point.y &&
+        point.x <
+          ((xj - xi) * (point.y - yi)) / (yj - yi + Number.EPSILON) + xi;
+      if (intersect) inside = !inside;
+    }
+
+    return inside;
+  }
+
   // 점과 선분 사이의 최단 거리를 구하는 함수
   private getDistancePointToSegment(
     point: PointType,
@@ -92,7 +111,18 @@ export class EraserTool implements Tool {
         typeof obj.properties.lineWidth === "number"
           ? obj.properties.lineWidth
           : 1;
-      return this.isPointWithinEraseThreshold(point, obj.shape.path, lineWidth);
+
+      // line 근처인 경우
+      if (this.isPointWithinEraseThreshold(point, obj.shape.path, lineWidth))
+        return true;
+
+      // 도형 내부인 경우
+      if (
+        "completed" in obj.shape &&
+        obj.shape.completed &&
+        this.isPointInPolygon(point, obj.shape.path)
+      )
+        return true;
     }
 
     return false;
@@ -156,10 +186,12 @@ export class EraserTool implements Tool {
     const tempId = "eraser-highlight";
 
     ctx.removeTempObject(tempId);
-
+    let found = false;
     for (let i = objects.length - 1; i >= 0; i--) {
       const obj = objects[i];
+
       if (this.isObjectNearPoint(point, obj)) {
+        found = true;
         ctx.addTempObject({
           id: tempId,
           toolId: this.id,
@@ -172,6 +204,16 @@ export class EraserTool implements Tool {
         });
         break;
       }
+    }
+
+    // 지울 수 있는 영역이면 마우스 커서를 지우개 아이콘으로 변경
+    const canvas = (ctx as any).canvasRef?.current as
+      | HTMLCanvasElement
+      | undefined;
+    if (canvas) {
+      canvas.style.cursor = found
+        ? 'url("/assets/eraser.svg") 8 8, auto'
+        : "default";
     }
   };
 

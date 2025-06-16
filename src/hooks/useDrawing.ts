@@ -75,6 +75,7 @@ export const useDrawing = (toolRegistry: ToolRegistryType) => {
       removeTempObject,
       getCurrentObjects,
       getToolInstance,
+      canvasRef,
     }),
     [objects, activeTool]
   );

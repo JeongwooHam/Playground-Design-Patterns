@@ -60,6 +60,16 @@ export class PenTool implements Tool {
       shape: { path: this.currentPath },
       properties: { color: this.color, lineWidth: this.lineWidth },
     });
+
+    // 그리는 중 커서 스타일 변경
+    const canvas = (ctx as any).canvasRef?.current as
+      | HTMLCanvasElement
+      | undefined;
+    if (canvas) {
+      const isSupported =
+        CSS && CSS.supports && CSS.supports("cursor", "crosshair");
+      if (isSupported) canvas.style.cursor = "crosshair";
+    }
   };
 
   onPointerMove = (point: PointType, ctx: DrawingContextType) => {
@@ -96,6 +106,14 @@ export class PenTool implements Tool {
     this.currentPath = [];
     this.lastPoint = null;
     this.tempObjectId = null;
+
+    // 커서 스타일 원복
+    const canvas = (ctx as any).canvasRef?.current as
+      | HTMLCanvasElement
+      | undefined;
+    if (canvas) {
+      canvas.style.cursor = "default";
+    }
   };
 
   updateOptions(options?: Partial<PenToolOptions>) {

@@ -2,7 +2,8 @@ export type PointType = { x: number; y: number };
 
 export type RenderFunctionType = (
   ctx: CanvasRenderingContext2D,
-  shapeData: any
+  shapeData: any,
+  properties?: Record<string, unknown>
 ) => void;
 export type PointerFunctionType = (
   point: PointType,

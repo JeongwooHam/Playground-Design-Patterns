@@ -5,6 +5,7 @@ import type {
   Tool,
   ToolInitializerType,
 } from "../types/toolInstance.type";
+import { getHighlightColor } from "../utils/color";
 import { isPathShapeObject } from "../utils/type";
 
 interface EraserToolOptions extends ToolInitializerType {
@@ -145,7 +146,6 @@ export class EraserTool implements Tool {
     properties: any
   ): void {
     if (!shapeData.path || shapeData.path.length < 2) return;
-
     const originalAlpha = ctx.globalAlpha;
     ctx.globalAlpha = 0.7;
     ctx.strokeStyle = this.highlightColor;
@@ -192,6 +192,9 @@ export class EraserTool implements Tool {
 
       if (this.isObjectNearPoint(point, obj)) {
         found = true;
+        const highlightColor = obj.properties.highlightColor
+          ? getHighlightColor(String(obj.properties.highlightColor))
+          : this.highlightColor;
         ctx.addTempObject({
           id: tempId,
           toolId: this.id,
@@ -200,6 +203,7 @@ export class EraserTool implements Tool {
             ...obj.properties,
             originalLineWidth: obj.properties.lineWidth,
             isEraserHighlight: true,
+            highlightColor,
           },
         });
         break;

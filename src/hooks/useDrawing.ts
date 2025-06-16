@@ -176,7 +176,7 @@ export const useDrawing = (toolRegistry: ToolRegistryType) => {
             ...obj.properties,
             id: obj.toolId,
           });
-          tempToolInstance.render(context, obj.shape);
+          tempToolInstance.render(context, obj.shape, obj.properties);
         }
       });
 
@@ -187,7 +187,7 @@ export const useDrawing = (toolRegistry: ToolRegistryType) => {
             ...obj.properties,
             id: obj.toolId,
           });
-          tempToolInstance.render(context, obj.shape);
+          tempToolInstance.render(context, obj.shape, obj.properties);
         }
       });
     },

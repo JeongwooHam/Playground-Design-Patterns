@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 
 export const useHistory = <T>(initial: T[]) => {
   const [history, setHistory] = useState<T[][]>([initial]);
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState<number>(0);
 
   const present = history[index];
 

@@ -25,8 +25,8 @@ export class PenTool extends ToolBase<PenToolOptions> {
 
   constructor(options: PenToolOptions) {
     super(options);
-    this.color = options.color || "#000000";
-    this.lineWidth = options.lineWidth || 1;
+    this.color = options.color ?? "#000000";
+    this.lineWidth = options.lineWidth ?? 1;
   }
 
   render(

@@ -34,9 +34,9 @@ export class BrushTool extends ToolBase<BrushToolOptions> {
 
   constructor(options: BrushToolOptions) {
     super(options);
-    this.color = options.color || "#000000";
-    this.lineWidth = options.lineWidth || 1;
-    this.fillColor = options.fillColor || this.color + "50";
+    this.color = options.color ?? "#000000";
+    this.lineWidth = options.lineWidth ?? 1;
+    this.fillColor = options.fillColor ?? this.color + "50";
   }
 
   render(

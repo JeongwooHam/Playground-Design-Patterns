@@ -23,7 +23,7 @@ export class EraserTool extends ToolBase<EraserToolOptions> {
 
   constructor(options: EraserToolOptions) {
     super(options);
-    this.highlightColor = options.highlightColor || "#000000";
+    this.highlightColor = options.highlightColor ?? "#000000";
   }
 
   private isPointWithinEraseThreshold(
@@ -152,7 +152,7 @@ export class EraserTool extends ToolBase<EraserToolOptions> {
     const originalAlpha = ctx.globalAlpha;
     ctx.globalAlpha = 0.7;
     ctx.strokeStyle = this.highlightColor;
-    ctx.lineWidth = (properties.originalLineWidth || 1) + 3;
+    ctx.lineWidth = (properties.originalLineWidth ?? 1) + 3;
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
 

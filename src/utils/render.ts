@@ -1,6 +1,7 @@
 import type {
   DrawingObjectType,
   TempDrawingObjectType,
+  ToolInitializerType,
   ToolRegistryType,
 } from "../types/toolInstance.type";
 
@@ -20,7 +21,7 @@ export const renderObjectsToCanvas = (
   for (const obj of objects) {
     const ToolClass = toolRegistry[obj.toolId];
     if (ToolClass) {
-      const tool = new ToolClass(obj.properties as any);
+      const tool = new ToolClass(obj.properties as ToolInitializerType);
       tool.render(ctx, obj.shape, obj.properties);
     }
   }
@@ -29,7 +30,7 @@ export const renderObjectsToCanvas = (
   for (const temp of tempObjects) {
     const ToolClass = toolRegistry[temp.toolId];
     if (ToolClass) {
-      const tool = new ToolClass(temp.properties as any);
+      const tool = new ToolClass(temp.properties as ToolInitializerType);
       tool.render(ctx, temp.shape, temp.properties);
     }
   }

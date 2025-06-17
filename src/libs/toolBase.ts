@@ -19,8 +19,9 @@ export abstract class ToolBase<O extends ToolInitializerType> {
     return this.schema;
   }
 
-  updateOptions(options?: Partial<O>) {
+  updateOptions(options?: Partial<O>, callback?: () => void) {
     if (!options) return;
+    callback?.();
     const schema = (this.constructor as any).schema;
     try {
       schema.parse(options);

@@ -141,19 +141,16 @@ export class BrushTool extends ToolBase<BrushToolOptions> {
   // 별도의 동작이 필요하여 기본 updateOptions를 오버라이딩합니다.
   updateOptions(options?: Partial<BrushToolOptions>) {
     if (!options) return;
-    // fillColor의 경우 지정되지 않으면 color의 50% opacity를 가지는 값으로 대체합니다.
-    if (options.fillColor) {
-      this.fillColor = options.fillColor;
-    } else if (options.color) {
-      this.fillColor = options.color + "50";
-    }
 
-    // 유효하지 않은 option 값에 대해 예외를 발생시킵니다.
-    try {
-      BrushToolOptionsSchema.parse(options);
-      Object.assign(this, options);
-    } catch (e) {
-      console.error("Invalid options provided to BrushTool:", e);
-    }
+    // fillColor의 경우 지정되지 않으면 color의 50% opacity를 가지는 값으로 대체합니다.
+    const setFillColor = () => {
+      if (options.fillColor) {
+        this.fillColor = options.fillColor;
+      } else if (options.color) {
+        this.fillColor = options.color + "50";
+      }
+    };
+
+    super.updateOptions(options, setFillColor);
   }
 }

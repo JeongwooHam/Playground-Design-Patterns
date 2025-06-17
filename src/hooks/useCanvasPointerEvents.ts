@@ -6,6 +6,12 @@ import type {
 } from "../types/toolInstance.type";
 import { getPoint } from "../utils/point";
 
+const isCanvasEventValid = (
+  e: PointerEvent,
+  canvasRef: RefObject<HTMLCanvasElement | null>,
+  activeTool: Tool<ToolInitializerType> | null
+) => !!activeTool && canvasRef.current === e.target;
+
 export const useCanvasPointerEvents = (
   canvasRef: RefObject<HTMLCanvasElement | null>,
   activeTool: Tool<ToolInitializerType> | null,
@@ -13,22 +19,22 @@ export const useCanvasPointerEvents = (
 ) => {
   const onPointerDown = (e: PointerEvent) => {
     const pt = getPoint(e);
-    if (activeTool && canvasRef.current === e.target) {
-      activeTool.onPointerDown?.(pt, ctx);
+    if (isCanvasEventValid(e, canvasRef, activeTool)) {
+      activeTool!.onPointerDown?.(pt, ctx);
     }
   };
 
   const onPointerMove = (e: PointerEvent) => {
     const pt = getPoint(e);
-    if (activeTool && canvasRef.current === e.target) {
-      activeTool.onPointerMove?.(pt, ctx);
+    if (isCanvasEventValid(e, canvasRef, activeTool)) {
+      activeTool!.onPointerMove?.(pt, ctx);
     }
   };
 
   const onPointerUp = (e: PointerEvent) => {
     const pt = getPoint(e);
-    if (activeTool && canvasRef.current === e.target) {
-      activeTool.onPointerUp?.(pt, ctx);
+    if (isCanvasEventValid(e, canvasRef, activeTool)) {
+      activeTool!.onPointerUp?.(pt, ctx);
     }
   };
 

@@ -1,13 +1,10 @@
 import type { z } from "zod";
 import type {
   PointerFunctionType,
-  Tool,
   ToolInitializerType,
 } from "../types/toolInstance.type";
 
-export abstract class ToolBase<O extends ToolInitializerType>
-  implements Tool<O>
-{
+export abstract class ToolBase<O extends ToolInitializerType> {
   static schema: z.ZodTypeAny;
 
   id: string;

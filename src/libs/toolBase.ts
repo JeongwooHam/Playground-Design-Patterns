@@ -16,12 +16,12 @@ export abstract class ToolBase<O extends ToolInitializerType> {
   }
 
   static getSchema(): z.ZodTypeAny {
-    return (this as any).schema;
+    return this.schema;
   }
 
   updateOptions(options?: Partial<O>) {
     if (!options) return;
-    const schema = (this.constructor as any).schema.partial();
+    const schema = (this.constructor as any).schema;
     try {
       schema.parse(options);
       Object.assign(this, options);

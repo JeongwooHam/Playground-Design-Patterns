@@ -150,7 +150,7 @@ export class BrushTool extends ToolBase<BrushToolOptions> {
 
     // 유효하지 않은 option 값에 대해 예외를 발생시킵니다.
     try {
-      BrushToolOptionsSchema.partial().parse(options);
+      BrushToolOptionsSchema.parse(options);
       Object.assign(this, options);
     } catch (e) {
       console.error("Invalid options provided to BrushTool:", e);

@@ -2,39 +2,33 @@ export type PointType = { x: number; y: number };
 
 export type RenderFunctionType = (
   ctx: CanvasRenderingContext2D,
-  shapeData: any
+  shapeData: any,
+  properties?: Record<string, unknown>
 ) => void;
 export type PointerFunctionType = (
   point: PointType,
   ctx: DrawingContextType
 ) => void;
-export type HitTestFunctionType = (
-  point: PointType,
-  ctx: DrawingObjectType
-) => boolean;
 export type SetToolFunctionType = (
   toolId: string,
   options?: ToolInitializerType
 ) => void;
 
-export interface BaseToolOptions {
-  color?: string;
-  lineWidth?: number;
-}
+export interface BaseToolOptions {}
 
 export interface ToolInitializerType extends BaseToolOptions {
+  id: string;
   [key: string]: unknown;
 }
 
-export interface Tool extends BaseToolOptions {
+export interface Tool<O extends ToolInitializerType = ToolInitializerType> {
   id: string;
   name: string;
   render: RenderFunctionType;
   onPointerDown?: PointerFunctionType;
   onPointerMove?: PointerFunctionType;
   onPointerUp?: PointerFunctionType;
-  updateOptions?: (options?: ToolInitializerType) => void;
-  hitTest?: HitTestFunctionType;
+  updateOptions?: (options?: Partial<O>) => void;
 }
 
 export type ToolConstructorType<
@@ -57,10 +51,14 @@ export type DrawingContextType = {
   getToolInstance: (toolId: string) => Tool | undefined;
 };
 
-export type DrawingObjectType = {
+export type DrawingObjectType<S = unknown> = {
   toolId: string;
-  shape: unknown;
+  shape: S;
   properties: Record<string, unknown>;
 };
 
 export type TempDrawingObjectType = DrawingObjectType & { id: string };
+
+export type ToolRegistryType = {
+  [id: string]: ToolConstructorType<Tool, ToolInitializerType>;
+};

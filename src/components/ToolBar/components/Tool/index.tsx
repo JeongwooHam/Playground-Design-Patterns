@@ -28,7 +28,7 @@ export const Tool = ({
       data-tool={config.type}
       className={clsx(S.Button, className, { [S.Active]: isCurrentTool })}
     >
-      <Icon size={iconSize} color={color} />
+      <Icon size={iconSize} color={!isCurrentTool ? "lightgray" : color} />
     </button>
   );
 };

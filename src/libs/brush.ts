@@ -1,22 +1,21 @@
-import type {
-  DrawingContextType,
-  PointType,
-  Tool,
-  ToolInitializerType,
-} from "../types/toolInstance.type";
+import { z } from "zod";
+import type { DrawingContextType, PointType } from "../types/toolInstance.type";
 import { getDistance } from "../utils/point";
+import { ToolBase } from "./toolBase";
 
-interface BrushToolOptions extends ToolInitializerType {
-  id: string;
-  color?: string;
-  lineWidth?: number;
-  fillColor?: string;
-}
+const BrushToolOptionsSchema = z.object({
+  id: z.string(),
+  color: z.string().optional(),
+  lineWidth: z.number().optional(),
+  fillColor: z.string().optional(),
+});
 
-export class BrushTool implements Tool {
-  id: string;
+type BrushToolOptions = z.infer<typeof BrushToolOptionsSchema>;
 
-  name: string = "Brush";
+export class BrushTool extends ToolBase<BrushToolOptions> {
+  static schema = BrushToolOptionsSchema;
+  static toolName = "Brush";
+
   color: string;
   lineWidth: number;
   fillColor: string;
@@ -34,10 +33,10 @@ export class BrushTool implements Tool {
   }
 
   constructor(options: BrushToolOptions) {
-    this.id = options.id;
-    this.color = options.color || "#000000";
-    this.lineWidth = options.lineWidth || 1;
-    this.fillColor = options.fillColor || this.color + "50";
+    super(options);
+    this.color = options.color ?? "#000000";
+    this.lineWidth = options.lineWidth ?? 1;
+    this.fillColor = options.fillColor ?? this.color + "50";
   }
 
   render(
@@ -80,6 +79,16 @@ export class BrushTool implements Tool {
         fillColor: this.fillColor,
       },
     });
+
+    // 그리는 중 커서 스타일 변경
+    const canvas = (ctx as any).canvasRef?.current as
+      | HTMLCanvasElement
+      | undefined;
+    if (canvas) {
+      const isSupported =
+        CSS && CSS.supports && CSS.supports("cursor", "crosshair");
+      if (isSupported) canvas.style.cursor = "crosshair";
+    }
   };
 
   onPointerMove = (point: PointType, ctx: DrawingContextType) => {
@@ -119,17 +128,29 @@ export class BrushTool implements Tool {
     }
     this.currentPath = [];
     this.tempObjectId = null;
+
+    // 커서 스타일 원복
+    const canvas = (ctx as any).canvasRef?.current as
+      | HTMLCanvasElement
+      | undefined;
+    if (canvas) {
+      canvas.style.cursor = "default";
+    }
   };
 
+  // 별도의 동작이 필요하여 기본 updateOptions를 오버라이딩합니다.
   updateOptions(options?: Partial<BrushToolOptions>) {
     if (!options) return;
-    // fillColor의 경우 지정되지 않으면 color의 50% opacity를 가지는 값으로 대체합니다.
-    if (options.fillColor) {
-      this.fillColor = options.fillColor;
-    } else if (options.color) {
-      this.fillColor = options.color + "50";
-    }
 
-    Object.assign(this, options);
+    // fillColor의 경우 지정되지 않으면 color의 50% opacity를 가지는 값으로 대체합니다.
+    const setFillColor = () => {
+      if (options.fillColor) {
+        this.fillColor = options.fillColor;
+      } else if (options.color) {
+        this.fillColor = options.color + "50";
+      }
+    };
+
+    super.updateOptions(options, setFillColor);
   }
 }

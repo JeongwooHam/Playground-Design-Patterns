@@ -1,21 +1,20 @@
-import type {
-  DrawingContextType,
-  PointType,
-  Tool,
-  ToolInitializerType,
-} from "../types/toolInstance.type";
+import { z } from "zod";
+import type { DrawingContextType, PointType } from "../types/toolInstance.type";
 import { getDistance } from "../utils/point";
+import { ToolBase } from "./toolBase";
 
-interface PenToolOptions extends ToolInitializerType {
-  id: string;
-  color?: string;
-  lineWidth?: number;
-}
+const PenToolOptionsSchema = z.object({
+  id: z.string(),
+  color: z.string().optional(),
+  lineWidth: z.number().optional(),
+});
 
-export class PenTool implements Tool {
-  id: string;
+type PenToolOptions = z.infer<typeof PenToolOptionsSchema>;
 
-  name: string = "Pen";
+export class PenTool extends ToolBase<PenToolOptions> {
+  static schema = PenToolOptionsSchema;
+  static toolName = "Pen";
+
   color: string;
   lineWidth: number;
 
@@ -25,9 +24,9 @@ export class PenTool implements Tool {
   private tempObjectId: string | null = null;
 
   constructor(options: PenToolOptions) {
-    this.id = options.id;
-    this.color = options.color || "#000000";
-    this.lineWidth = options.lineWidth || 1;
+    super(options);
+    this.color = options.color ?? "#000000";
+    this.lineWidth = options.lineWidth ?? 1;
   }
 
   render(
@@ -60,6 +59,16 @@ export class PenTool implements Tool {
       shape: { path: this.currentPath },
       properties: { color: this.color, lineWidth: this.lineWidth },
     });
+
+    // 그리는 중 커서 스타일 변경
+    const canvas = (ctx as any).canvasRef?.current as
+      | HTMLCanvasElement
+      | undefined;
+    if (canvas) {
+      const isSupported =
+        CSS && CSS.supports && CSS.supports("cursor", "crosshair");
+      if (isSupported) canvas.style.cursor = "crosshair";
+    }
   };
 
   onPointerMove = (point: PointType, ctx: DrawingContextType) => {
@@ -96,10 +105,13 @@ export class PenTool implements Tool {
     this.currentPath = [];
     this.lastPoint = null;
     this.tempObjectId = null;
-  };
 
-  updateOptions(options?: Partial<PenToolOptions>) {
-    if (!options) return;
-    Object.assign(this, options);
-  }
+    // 커서 스타일 원복
+    const canvas = (ctx as any).canvasRef?.current as
+      | HTMLCanvasElement
+      | undefined;
+    if (canvas) {
+      canvas.style.cursor = "default";
+    }
+  };
 }

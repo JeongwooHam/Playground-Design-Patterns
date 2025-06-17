@@ -4,6 +4,7 @@ import { Canvas } from "./components/Canvas";
 import { ToolBar } from "./components/ToolBar";
 import { useDrawing } from "./hooks/useDrawing";
 import { BrushTool } from "./libs/brush";
+import { EraserTool } from "./libs/eraser";
 import { PenTool } from "./libs/pen";
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
     useDrawing({
       pen: PenTool,
       brush: BrushTool,
+      eraser: EraserTool,
     });
 
   return (

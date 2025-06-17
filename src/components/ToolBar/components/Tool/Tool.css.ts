@@ -13,9 +13,6 @@ export const Button = style({
     "&:hover": {
       transform: "scale(1.05)",
     },
-    "&:hover svg": {
-      color: "black",
-    },
     "&:active": {
       transform: "scale(0.98)",
     },

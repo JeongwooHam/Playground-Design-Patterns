@@ -1,4 +1,4 @@
-import { useState, type ChangeEvent } from "react";
+import { useEffect, useState, type ChangeEvent } from "react";
 import type { ToolType } from "../../../../types/buttonConfig.type";
 import type { ColorType } from "../../../../types/color.type";
 import type { SetToolFunctionType } from "../../../../types/toolInstance.type";
@@ -7,6 +7,7 @@ import * as S from "./ColorPicker.css";
 
 type ColorPickerProps = {
   tool: ToolType;
+  activeToolId: string | null;
   setTool: SetToolFunctionType;
   optionKey: string;
   isRendered?: boolean;
@@ -15,6 +16,7 @@ type ColorPickerProps = {
 
 export const ColorPicker = ({
   tool,
+  activeToolId,
   setTool,
   optionKey,
   isRendered = false,
@@ -23,10 +25,18 @@ export const ColorPicker = ({
   const [color, setColor] = useState<ColorType>("#000000");
   const onColorChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (!isColorType(e.target.value)) return;
+    if (!activeToolId) return;
 
     setColor(e.target.value);
-    setTool(tool, { [optionKey]: e.target.value });
+    setTool(tool, { id: activeToolId, [optionKey]: e.target.value });
   };
+
+  useEffect(
+    function reset() {
+      return () => setColor("#000000");
+    },
+    [isRendered]
+  );
 
   if (!isRendered) {
     return <></>;

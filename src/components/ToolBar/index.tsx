@@ -46,6 +46,7 @@ const Pen = ({ activeToolId, setTool }: ToolProps) => {
       />
       <ColorPicker
         tool={TOOL_CONFIG.pen.type}
+        activeToolId={activeToolId}
         setTool={setTool}
         optionKey="color"
         label="선 색"
@@ -53,6 +54,7 @@ const Pen = ({ activeToolId, setTool }: ToolProps) => {
       />
       <LineWidthPicker
         tool={TOOL_CONFIG.pen.type}
+        activeToolId={activeToolId}
         setTool={setTool}
         optionKey="lineWidth"
         min={1}
@@ -83,6 +85,7 @@ const Brush = ({ activeToolId, setTool }: ToolProps) => {
       />
       <ColorPicker
         tool={TOOL_CONFIG.brush.type}
+        activeToolId={activeToolId}
         setTool={setTool}
         optionKey="color"
         label="선 색"
@@ -90,6 +93,7 @@ const Brush = ({ activeToolId, setTool }: ToolProps) => {
       />
       <LineWidthPicker
         tool={TOOL_CONFIG.brush.type}
+        activeToolId={activeToolId}
         setTool={setTool}
         optionKey="lineWidth"
         min={1}
@@ -99,6 +103,7 @@ const Brush = ({ activeToolId, setTool }: ToolProps) => {
       />
       <ColorPicker
         tool={TOOL_CONFIG.brush.type}
+        activeToolId={activeToolId}
         setTool={setTool}
         optionKey="fillColor"
         label="채우기 색"
@@ -127,6 +132,7 @@ const Eraser = ({ activeToolId, setTool }: ToolProps) => {
       />
       <ColorPicker
         tool={TOOL_CONFIG.eraser.type}
+        activeToolId={activeToolId}
         setTool={setTool}
         optionKey="highlightColor"
         label="강조 색"
